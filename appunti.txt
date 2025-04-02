@@ -1,0 +1,71 @@
+per seguire le linee guida che impongono un tempo costante
+per le operazioni d'inserimento e rimozione, ho scelto di utilizzare
+una struttura che implementa i nodi. un altro modo sarebbe stato
+creare una struttura con grandezza fissa (es. 10 posti) e una volta
+riempiti, attraverso una new, raddoppiarne la grandezza(20 posti)
+il che sarebbe stato scomodo giocando sui bordi.
+
+nella classe struct implemento solo il costruttore nullo e il costruttore
+completo, per quanto riguarda il copy constructor, operator= e distruttore 
+uso la versione standard e affido al compilatore. la scelta verrà gestita 
+da QUEUE.
+
+la mia queue avrà un head e un _size, implementerò anche _tail dato che 
+non sarà una lista di celle conseguenti(imile array) ma strutturata a
+nodi sparsi per la memoria.
+
+_tail è essenziale per accodare nuovi elementi alla lista. inoltre il 
+testo richiede *accesso in lettura e scrittura all'elemnto più giovane 
+e all'elemnto più vecchio*, in questo modo, l'accesso richiede O(1);
+
+per l'enqueue(const T& value) abbiamo due casi: 
+1._tail non punta a nullptr: allora creiamo un nuovo nodo temp, gli 
+assegnamo value(preso in input), e poi:
+temp.next() = nullptr(di default)
+_tail.next() = temp;
+_tail = tail.next().
+quindi creo un nuovo nodo e gli assegno value, il next dell'ultimo 
+punta al nuovo nodo e infine sposto _tail. e se tutto va bene(la new 
+potrebbe fallire) aumento _size di 1.
+
+2._tail punta a nullptr: in questo caso la Queue è vuota, quindi
+il procedimento è lo stesso con qualche differenza:
+-creo e un puntatore temp a un nuovo nodo, con value
+-assegno temp sia a _head che a _tail
+-cancello temp
+
+nell'enqueue , quando verifico che la lista sia vuota tramite un controllo
+if su !_tail, ho aggiunto anche un ulteriore certezza, || !_head, per sicurezza
+tanti se tail è null non viene neanche controllato head.
+
+
+la dequeue ha un comportamento diverso a seconda di due casi:
+1. _head è nullptr -> non la eseguo
+2._head non è nullptr: quindi
+-pointer = head
+-head = head.next //sposto head al elemento dopo, da gestire se non ci sono elementi dopo
+-elimino la casella di pointer e pointer
+
+se non ho elementi dopo, non va gestito in quanto _head si sposterebbe a nullptr.
+però in questo caso va invece gestito _tail che punterebbe a qualcosa che 
+è stato eliminato altrimenti
+
+
+per il copy constructor decido di riciclare l'enqueue, gia sicura e testata,
+piuttosto che creare un assegnamento direttamente nella funzione. grazie a cio
+non devo preoccuparmi di assegnare la _tail e incrementare il size.
+azzero l
+
+
+la struct nodo non ho modo di inzializzare value nel costruttore vuoto. non 
+posso sapere che tipo sarà
+
+le operazioni di read le faccio per reference in modo da non permettere la 
+modifica. è stato per me difficile trovare il modo di gestire le eccezioni senza
+avere mempry leaks cosi ho deciso di optare per una gestione che non utilizzasse
+blocchi try catch e throw ma restituisce un file testuale che conferma l'impossibilità
+di leggere/scrivere l'ultimo/primo elemento qualora la coda sia nulla. se invece
+non è nulla, 
+
+per il metodo find, scorro i nodi controllando nodo.value sia diverso dall'
+elemento preso in input. se sono uguali fermo e restituisco true.
