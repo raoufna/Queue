@@ -60,12 +60,11 @@ void test_enqueue_e_dequeue_EASY()
     separator_lines();
 }
 
-// errore su q_empty
 void test_enqueue_e_dequeue_HARD()
 {
     std::cout << "******** Test ENQUEUE e DEQUEUE randomici, su elementi randomici nella lista di interi ********" << std::endl;
 
-    long n_volte = 300;
+    long n_volte = 3000;
     Queue<int> q;
 
     std::random_device rd;  // Generatore di entropia hardware (se disponibile)
@@ -98,7 +97,7 @@ void test_enqueue_e_dequeue_HARD()
             }
             catch (...)
             {
-                std::cerr << "la coda è vuota" << std::endl;
+                std::cerr << "IMPOSSIBILE FARE DEQUEUE: la coda è vuota" << std::endl;
             }
         }
 
@@ -182,30 +181,27 @@ void test_iter_ctor()
 
     separator_lines();
 }
-/*void test_read_write(){
+void test_read_write(){
     std::cout << "******** Test azioni di lettura su CODA ********" << std::endl;
     int a[5] = {1,2,3,4,5};
     Queue<int> q(a,a+5);
 
     std::cout << "q: " << q << std::endl;
-    q.read_first();
-    q.read_last();
-    q.write_first(5);
-    q.write_last(10);
-    std::cout << "q: " << q << std::endl;
+    std::cout << "elemento più vecchio: " << q.first() << std::endl;
+    std::cout << "elemento più recente: " << q.last() << std::endl;
 
     std::cout << "******** Test azioni di lettura su CODA VUOTA ********" << std::endl;
+    try{
     Queue<int> q_empty;
 
-    std::cout << "q_empty: " << q_empty << std::endl;
-    q_empty.read_first();
-    q_empty.read_last();
-    q_empty.write_first(5);
-    q_empty.write_last(5);
-    std::cout << "q_empty: " << q_empty << std::endl;
-
+    std::cout << "elemento più vecchio: " << q_empty.first() << std::endl;
+    std::cout << "elemento più recente: " << q_empty.last() << std::endl;
+    }catch(...){
+        std::cout << "ERRORE: la coda è vuota" << std::endl;
+    }
+    
     separator_lines();
-}*/
+}
 /*
 void test_find(){
     std::cout << "******** Test ricerca elemento nella CODA ********" << std::endl;
@@ -234,7 +230,7 @@ void test_find(){
     std::cout << "******** Test azioni di lettura su CODA ********" << std::endl;
 
     std::string a[3] = {"testa","corpo","coda"};
-    //Queue<std::string> q(a,a+3); //iter ctor
+    Queue<std::string> q(a,a+3); //iter ctor
     Queue<std::string> q_empty;
 
     q_empty.read_first();
@@ -553,14 +549,14 @@ int main()
 
     // TEST OK INT
     //  test_enqueue_e_dequeue_EASY();
+    // test_enqueue_e_dequeue_HARD();
     //  test_copy_construtor();
     //  test_metodi_fondamentali_int();
     //  test_iter_ctor();
 
     // TEST DA SISTEMARE
 
-    test_enqueue_e_dequeue_HARD();
-    // test_read_write();
+    test_read_write();
     //  test_find();
     //  test_enqueue_e_dequeue_EASY_struct();
     //  test_enqueue_e_dequeue_HARD_struct();
