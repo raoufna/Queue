@@ -69,3 +69,10 @@ non è nulla,
 
 per il metodo find, scorro i nodi controllando nodo.value sia diverso dall'
 elemento preso in input. se sono uguali fermo e restituisco true.
+
+
+
+nel transformif Prendiamo l'elemento in testa alla coda Se l'elemento soddisfa 
+il predicato, applichiamo il funtore poi Inseriamo l'elemento (modificato o meno)
+ nella coda temporanea e usciti dal ciclo ripristiniamo gli elementi nella coda originale
+ tramite un altro while

@@ -28,6 +28,11 @@ public:
     template <typename IterT>
     Queue(IterT b, IterT e) : _size(0), _head(nullptr), _tail(nullptr)
     {
+        insert(b,e);
+    }
+
+    template <typename IterT>
+    void insert(IterT b, IterT e){
         try
         {
             while (b != e)
@@ -89,19 +94,22 @@ public:
 
     ~Queue()
     {
-        //std::cerr << "Distruttore chiamato." << std::endl;
+        // std::cerr << "Distruttore chiamato." << std::endl;
         clear();
-        //std::cerr << "Distruttore terminato." << std::endl;
+        // std::cerr << "Distruttore terminato." << std::endl;
     }
 
-    bool isEmpty() const { return _size == 0; }
+    bool isEmpty() const
+    {
+        return (_size == 0 || _head == nullptr || _tail == nullptr);
+    }
 
     void dequeue()
     {
         // se la Queue è vuota, fermiamo subito.
-        if (_size == 0)
+        if (this->isEmpty())
         {
-            return;
+            throw std::runtime_error("Queue is empty");
         }
 
         Node *temp = _head;
@@ -111,20 +119,20 @@ public:
         delete temp;
         temp = nullptr;
 
-        if (!_head)
+        if (_head == nullptr)
         {
             _tail = nullptr;
         }
-        
     }
 
     void enqueue(const T &value)
     {
-        try{
+        try
+        {
             Node *temp = new Node(value);
 
             // se la Queue è vuota
-            if (_size == 0)
+            if (this->isEmpty())
             {
                 _head = temp;
                 _tail = temp;
@@ -136,93 +144,87 @@ public:
             }
 
             _size++;
-        }catch(...){
+        }
+        catch (...)
+        {
             clear();
             throw;
         }
     }
 
-    void clear() {
-        Node *curr = _head;
+    void clear()
+    {
+       /* Node *curr = _head;
         Node *temp = nullptr;
-        while(curr != nullptr) {
-          temp = curr->next;
-          delete curr;
-          curr = temp;
+        while (curr != nullptr)
+        {
+            temp = curr->next;
+            delete curr;
+            curr = temp;
         }
         _head = nullptr;
         _tail = nullptr;
-        _size = 0;
+        _size = 0;*/
+
+        while (!isEmpty())
+        {
+            dequeue();
+        }
+        
     }
-    
 
     unsigned int getSize() const { return _size; }
 
-    T read_first() const
-    {   
-        if (this->isEmpty())
-        {
-            std::cout << "IMPOSSIBILE LEGGERE PRIMO ELEMENTO: ";
-            std::cout << "La coda è vuota!" << std::endl;
-            return T();
-        }
-        return _tail->value;
-        
-    }
-
-    T read_last() const
-    {        
-        if (this->isEmpty())
-        {
-            std::cout << "IMPOSSIBILE LEGGERE ULTIMO ELEMENTO: ";
-            std::cout << "La coda è vuota!" << std::endl;
-            return T();
-        }
-        return _tail->value;
-    }
-
-    bool write_first(const T &value)
-    {
-        if (this->isEmpty())
-        {
-            std::cout << "IMPOSSIBILE MODIFICARE PRIMO ELEMENTO: ";
-            std::cout << "La coda è vuota!" << std::endl;
-            return false;
-        }
-        _head->value = value;
-        return true;
-    }
-
-    bool write_last(const T &value)
-    {   
-        if (this->isEmpty())
-        {
-            std::cout << "IMPOSSIBILE MODIFICARE ULTIMO ELEMENTO: ";
-            std::cout << "La coda è vuota!" << std::endl;
-            return false;
-        }
-        _tail->value = value;
-        return true;
-    }
-
-    bool find(const T& value) const{
-        Node *curr = _head;
-
-        while (curr != nullptr)
-        {
-            if(curr->value == value) return true;
+    
+    template<typename U>
+    bool find(const T& value, const U& comparator) const {
+        Node* curr = _head;
+    
+        while (curr != nullptr) {
+            // Confirsta l'elemento corrente con value utilizzando il comparatore
+            if (comparator(curr->value, value)) {
+                return true;
+            }
             curr = curr->next;
         }
-        
+    
         return false;
-        
     }
 
-
-
-
-
-
+    const T& first() const{
+        if(isEmpty()) throw std::runtime_error("Queue is empty");
+        return _head->value; ///< Restituisce il dato del nodo in testa
+   }
+   /**
+     @brief Restituisce l'elemento più vecchio (head) della coda.
+     
+     @return Riferimento all'elemento in testa alla coda.
+     @throws std::runtime_error Se la coda è vuota.
+   */
+   T& first(){
+       if(isEmpty()) throw std::runtime_error("Queue is empty");
+        return _head->value; ///< Restituisce il dato del nodo in testa
+   }
+    /**
+     @brief Restituisce l'elemento più recente (tail) della coda.
+     
+     @return Riferimento all'elemento in fondo alla coda.
+     @throws std::runtime_error Se la coda è vuota.
+   */
+   const T& last() const{
+        if(isEmpty()) throw std::runtime_error("Queue is empty");
+        return _tail->value; ///< Restituisce il dato del nodo in fondo
+   }
+     /**
+     @brief Restituisce l'elemento più recente (tail) della coda.
+     
+     @return Riferimento all'elemento in fondo alla coda.
+     @throws std::runtime_error Se la coda è vuota.
+   */
+   T& last() {
+       if(isEmpty()) throw std::runtime_error("Queue is empty");
+        return _tail->value; ///< Restituisce il dato del nodo in fondo
+   }
 
     // Definizione della classe const_iterator (sola lettura)
     class const_iterator
@@ -300,10 +302,8 @@ public:
         return const_iterator(nullptr);
     }
 
-
-    
     friend std::ostream &operator<<(std::ostream &os,
-                            const Queue<T> &queue)
+                                    const Queue<T> &queue)
     {
 
         typename Queue<T>::const_iterator i, ie;
@@ -319,5 +319,36 @@ public:
 
         return os;
     }
-}; //Queue
+}; // Queue
+
+template <typename T, typename Predicate, typename Functor>
+void transformIf(Queue<T> &Q, Predicate P, Functor F)
+{
+    if (Q.isEmpty())
+    {
+        std::cout << "la coda è vuota" << std::endl;
+        return;
+    }
+    
+    Queue<T> queue_temp;
+
+    while (!Q.isEmpty())
+    {
+        
+        T value = Q.first();
+        Q.dequeue();
+
+        if (P(value))
+            value = F(value);
+        
+        queue_temp.enqueue(value);
+    }
+
+    while (!queue_temp.isEmpty())
+    {
+        Q.enqueue(queue_temp.first());
+        queue_temp.dequeue();
+    }
+}
+
 #endif
