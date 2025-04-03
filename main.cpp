@@ -25,7 +25,7 @@ void printArray(const T (&arr)[N])
 /*     INT     */
 void test_enqueue_e_dequeue_EASY()
 {
-    std::cout << "******** Test enqueue e dequeue su CODA int ********" << std::endl;
+    std::cout << "******** Test enqueue e dequeue su CODA (int)********" << std::endl;
 
     Queue<int> q;
 
@@ -48,6 +48,7 @@ void test_enqueue_e_dequeue_EASY()
     std::cout << "3 rimozione: " << q << '\n';
     try
     {
+        std::cout << "dequeue su coda vuota: " << std::endl;
         q.dequeue();
         // Tentativo di rimuovere da una coda vuota
         std::cout << "coda vuota: " << q << '\n';
@@ -62,7 +63,7 @@ void test_enqueue_e_dequeue_EASY()
 
 void test_enqueue_e_dequeue_HARD()
 {
-    std::cout << "******** Test ENQUEUE e DEQUEUE randomici, su elementi randomici nella lista di interi ********" << std::endl;
+    std::cout << "******** Test ENQUEUE e DEQUEUE randomici su CODA (int) ********" << std::endl;
 
     long n_volte = 3000;
     Queue<int> q;
@@ -166,8 +167,7 @@ void test_metodi_fondamentali_int()
     separator_lines();
 } // ~Queue()
 
-void test_iter_ctor()
-{
+void test_iter_ctor(){
 
     std::cout << "******** Test costruttore tramite due iteratori ********" << std::endl;
 
@@ -183,46 +183,55 @@ void test_iter_ctor()
 }
 void test_read_write(){
     std::cout << "******** Test azioni di lettura su CODA ********" << std::endl;
-    int a[5] = {1,2,3,4,5};
-    Queue<int> q(a,a+5);
+    int a[5] = {1, 2, 3, 4, 5};
+    Queue<int> q(a, a + 5);
 
     std::cout << "q: " << q << std::endl;
     std::cout << "elemento più vecchio: " << q.first() << std::endl;
     std::cout << "elemento più recente: " << q.last() << std::endl;
 
     std::cout << "******** Test azioni di lettura su CODA VUOTA ********" << std::endl;
-    try{
-    Queue<int> q_empty;
+    try
+    {
+        Queue<int> q_empty;
 
-    std::cout << "elemento più vecchio: " << q_empty.first() << std::endl;
-    std::cout << "elemento più recente: " << q_empty.last() << std::endl;
-    }catch(...){
+        std::cout << "elemento più vecchio: " << q_empty.first() << std::endl;
+        std::cout << "elemento più recente: " << q_empty.last() << std::endl;
+    }
+    catch (...)
+    {
         std::cout << "ERRORE: la coda è vuota" << std::endl;
     }
-    
+
     separator_lines();
 }
-/*
-void test_find(){
+
+template <typename T>
+struct equals_primitivi {
+    bool operator()(const T& a, const T& b) const {
+        return a == b;
+    }
+};
+void test_find()
+{
+    equals_primitivi<int> e;
     std::cout << "******** Test ricerca elemento nella CODA ********" << std::endl;
 
-    int a[5] = {1,2,3,4,5};
-    Queue<int> q(a,a+5);
+    int a[5] = {1, 2, 3, 4, 5};
+    Queue<int> q(a, a + 5);
     std::cout << "q: " << q << std::endl;
 
-
-    std::cout << "->5 in q: " << q.find(5) << std::endl;
-    std::cout << "->9 in q: " << q.find(9) << std::endl;
-
+    std::cout << "->5 in q: " << q.find(5, e) << std::endl;
+    std::cout << "->9 in q: " << q.find(9, e) << std::endl;
 
     Queue<int> q_empty;
     std::cout << "q_empty: " << q_empty << std::endl;
 
-    std::cout << "->5 in q_empty: " << q_empty.find(5) << std::endl;
-    std::cout << "->9 in q_empty: " << q_empty.find(9) << std::endl;
+    std::cout << "->5 in q_empty: " << q_empty.find(5, e) << std::endl;
+    std::cout << "->9 in q_empty: " << q_empty.find(9, e) << std::endl;
 
     separator_lines();
-}*/
+}
 
 /*    STRING    */
 
@@ -283,12 +292,11 @@ struct EqualsPunto
 
 /*     PUNTO     */
 
-// errore su q_empty
+
 void test_enqueue_e_dequeue_EASY_struct()
 {
+    std::cout << "******** Test enqueue e dequeue su CODA (Punto) ********" << std::endl;
     Queue<Punto> q;
-
-    std::cout << "Test enqueue e dequeue EASY (Punto):\n";
 
     q.enqueue(Punto(1, 2));
     std::cout << q << std::endl;
@@ -305,19 +313,23 @@ void test_enqueue_e_dequeue_EASY_struct()
     std::cout << "2 rimozione: " << q << '\n';
     q.dequeue();
     std::cout << "3 rimozione: " << q << '\n';
-    // try{
-    //     q.dequeue();
-    //     std::cout << "coda vuota: " << q << '\n';
-    // }catch(...){
-    //     std::cerr << "la coda è vuota" << std::endl;
-    // }
+    
+    try{
+        std::cout << "dequeue su coda vuota: " << std::endl;
+        q.dequeue();
+
+        //unreachable
+        std::cout << "coda vuota: " << q << '\n';
+    }catch(...){
+        std::cerr << "la coda è vuota" << std::endl;
+    }
+
     separator_lines();
 }
 
-// errore su q_empty
 void test_enqueue_e_dequeue_HARD_struct()
 {
-    std::cout << "******** Test ENQUEUE e DEQUEUE randomici su Punto ********" << std::endl;
+    std::cout << "******** Test ENQUEUE e DEQUEUE randomici su CODA (Punto) ********" << std::endl;
 
     long n_volte = 3000;
     Queue<Punto> q;
@@ -344,8 +356,12 @@ void test_enqueue_e_dequeue_HARD_struct()
         }
         else
         {
-            q.dequeue();
-            std::cout << "DEQUEUE" << std::endl;
+            try{
+                q.dequeue();
+                std::cout << "DEQUEUE" << std::endl;
+            }catch(...){
+                std::cerr << "ERRORE DEQUEUE: la coda è vuota" << std::endl;
+            }
         }
         std::cout << q << "\n"
                   << std::endl;
@@ -548,26 +564,30 @@ int main()
 {
 
     // TEST OK INT
-    //  test_enqueue_e_dequeue_EASY();
-    // test_enqueue_e_dequeue_HARD();
-    //  test_copy_construtor();
-    //  test_metodi_fondamentali_int();
-    //  test_iter_ctor();
+     test_enqueue_e_dequeue_EASY();
+    test_enqueue_e_dequeue_HARD();
+     test_copy_construtor();
+     test_metodi_fondamentali_int();
+     test_iter_ctor();
+    test_read_write();
+    test_find();
 
     // TEST DA SISTEMARE
 
-    test_read_write();
-    //  test_find();
-    //  test_enqueue_e_dequeue_EASY_struct();
-    //  test_enqueue_e_dequeue_HARD_struct();
+/*va tolta person come struct e vanno implementato metodi di transformif per punto
+in piu oigni test deve essere standard:
+-iniziare con la riga con titolo e asterischi
+-finire con separator lines*/
 
     // TEST OK STRUCT
-    //  test_copy_construtor_struct();
-    //  test_metodi_fondamentali_struct();
-    //  test_iter_ctor_struct();
-    //  test_read_write_struct();
-    //  test_find_struct();
-    //  testStructQueue();
+    test_enqueue_e_dequeue_EASY_struct();
+    test_enqueue_e_dequeue_HARD_struct();
+     test_copy_construtor_struct();
+     test_metodi_fondamentali_struct();
+     test_iter_ctor_struct();
+     test_read_write_struct();
+     test_find_struct();
+     testStructQueue();
 
     return 0;
 }
