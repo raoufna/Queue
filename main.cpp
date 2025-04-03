@@ -12,9 +12,11 @@ void separator_lines()
 }
 
 template <typename T, size_t N>
-void printArray(const T (&arr)[N]) {
+void printArray(const T (&arr)[N])
+{
     std::cout << "[ ";
-    for (size_t i = 0; i < N; i++) {
+    for (size_t i = 0; i < N; i++)
+    {
         std::cout << arr[i] << " ";
     }
     std::cout << " ]" << std::endl;
@@ -23,10 +25,9 @@ void printArray(const T (&arr)[N]) {
 /*     INT     */
 void test_enqueue_e_dequeue_EASY()
 {
-    // Creazione della queue di interi
-    Queue<int> q;
+    std::cout << "******** Test enqueue e dequeue su CODA int ********" << std::endl;
 
-    std::cout << "Test enqueue e dequeue EASY:\n";
+    Queue<int> q;
 
     // Aggiunta di elementi alla coda
     q.enqueue(10);
@@ -45,19 +46,26 @@ void test_enqueue_e_dequeue_EASY()
     std::cout << "2 rimozione: " << q << '\n';
     q.dequeue();
     std::cout << "3 rimozione: " << q << '\n';
-
-    q.dequeue();
-    // Tentativo di rimuovere da una coda vuota
-    std::cout << "coda vuota: " << q << '\n';
+    try
+    {
+        q.dequeue();
+        // Tentativo di rimuovere da una coda vuota
+        std::cout << "coda vuota: " << q << '\n';
+    }
+    catch (...)
+    {
+        std::cerr << "la coda è vuota" << std::endl;
+    }
 
     separator_lines();
 }
 
+// errore su q_empty
 void test_enqueue_e_dequeue_HARD()
 {
     std::cout << "******** Test ENQUEUE e DEQUEUE randomici, su elementi randomici nella lista di interi ********" << std::endl;
 
-    long n_volte = 30;
+    long n_volte = 300;
     Queue<int> q;
 
     std::random_device rd;  // Generatore di entropia hardware (se disponibile)
@@ -83,9 +91,17 @@ void test_enqueue_e_dequeue_HARD()
         }
         else
         {
-            q.dequeue();
-            std::cout << "DEQUEUE, SCELTA " << scelta << ",numero: " << numeroCasuale << std::endl;
+            try
+            {
+                q.dequeue();
+                std::cout << "DEQUEUE, SCELTA " << scelta << ",numero: " << numeroCasuale << std::endl;
+            }
+            catch (...)
+            {
+                std::cerr << "la coda è vuota" << std::endl;
+            }
         }
+
         std::cout << q << "\n"
                   << std::endl;
     }
@@ -144,24 +160,24 @@ void test_metodi_fondamentali_int()
     std::cout << "Stampa di q3 dopo assegnamento:" << std::endl;
     std::cout << q3 << std::endl; // operator<<
 
-    //lettura elementi
-    // std::cout << "elemento più vecchio di q: " << q.read_first() << std::endl; //old
-    // std::cout << "elemento più recente di q: " << q.read_last() << std::endl;//recent
+    // lettura elementi
+    //  std::cout << "elemento più vecchio di q: " << q.read_first() << std::endl; //old
+    //  std::cout << "elemento più recente di q: " << q.read_last() << std::endl;//recent
 
     separator_lines();
 } // ~Queue()
 
-
-
-void test_iter_ctor(){
+void test_iter_ctor()
+{
 
     std::cout << "******** Test costruttore tramite due iteratori ********" << std::endl;
-    
-    int a[5] = {20,10,5,100,80};
 
-    Queue<int> q(a,a+5); //ctor iterator
+    int a[5] = {20, 10, 5, 100, 80};
 
-    std::cout << "stampa array: "; printArray(a);
+    Queue<int> q(a, a + 5); // ctor iterator
+
+    std::cout << "stampa array: ";
+    printArray(a);
     std::cout << "stampa queue: " << q << std::endl;
 
     separator_lines();
@@ -170,14 +186,14 @@ void test_iter_ctor(){
     std::cout << "******** Test azioni di lettura su CODA ********" << std::endl;
     int a[5] = {1,2,3,4,5};
     Queue<int> q(a,a+5);
-    
-    std::cout << "q: " << q << std::endl;    
+
+    std::cout << "q: " << q << std::endl;
     q.read_first();
     q.read_last();
     q.write_first(5);
     q.write_last(10);
     std::cout << "q: " << q << std::endl;
-    
+
     std::cout << "******** Test azioni di lettura su CODA VUOTA ********" << std::endl;
     Queue<int> q_empty;
 
@@ -188,33 +204,31 @@ void test_iter_ctor(){
     q_empty.write_last(5);
     std::cout << "q_empty: " << q_empty << std::endl;
 
-    separator_lines();    
+    separator_lines();
 }*/
 /*
 void test_find(){
     std::cout << "******** Test ricerca elemento nella CODA ********" << std::endl;
-    
+
     int a[5] = {1,2,3,4,5};
     Queue<int> q(a,a+5);
     std::cout << "q: " << q << std::endl;
 
-    
+
     std::cout << "->5 in q: " << q.find(5) << std::endl;
     std::cout << "->9 in q: " << q.find(9) << std::endl;
 
 
-    Queue<int> q_empty;    
+    Queue<int> q_empty;
     std::cout << "q_empty: " << q_empty << std::endl;
-    
+
     std::cout << "->5 in q_empty: " << q_empty.find(5) << std::endl;
     std::cout << "->9 in q_empty: " << q_empty.find(9) << std::endl;
 
     separator_lines();
 }*/
 
-
 /*    STRING    */
-
 
 /*void test_read_write_s(){
     std::cout << "******** Test azioni di lettura su CODA ********" << std::endl;
@@ -236,38 +250,44 @@ void test_find(){
     q.write_first("banana");
     q.write_last("mela");
     std::cout << "queue: " << q << std::endl;
-    
+
     separator_lines();
 }*/
 
 /*    STRUCT    */
-struct Punto {
+struct Punto
+{
     int x, y;
 
     // Costruttore per comodità
     Punto(int _x = 0, int _y = 0) : x(_x), y(_y) {}
 
     // Operatore di uguaglianza (necessario per il find)
-    bool operator==(const Punto& other) const {
+    bool operator==(const Punto &other) const
+    {
         return x == other.x && y == other.y;
     }
 
     // Operatore di stream per la stampa
-    friend std::ostream& operator<<(std::ostream& os, const Punto& p) {
+    friend std::ostream &operator<<(std::ostream &os, const Punto &p)
+    {
         os << "(" << p.x << ", " << p.y << ")";
         return os;
     }
 };
 
-//funtore di uguaglianza per Punto
-struct EqualsPunto {
-    bool operator()(const Punto& p1, const Punto& p2) const {
+// funtore di uguaglianza per Punto
+struct EqualsPunto
+{
+    bool operator()(const Punto &p1, const Punto &p2) const
+    {
         return (p1.x == p2.x) && (p1.y == p2.y); // Confirsta x e y
     }
 };
 
 /*     PUNTO     */
 
+// errore su q_empty
 void test_enqueue_e_dequeue_EASY_struct()
 {
     Queue<Punto> q;
@@ -289,13 +309,16 @@ void test_enqueue_e_dequeue_EASY_struct()
     std::cout << "2 rimozione: " << q << '\n';
     q.dequeue();
     std::cout << "3 rimozione: " << q << '\n';
-
-    q.dequeue();
-    std::cout << "coda vuota: " << q << '\n';
-
+    // try{
+    //     q.dequeue();
+    //     std::cout << "coda vuota: " << q << '\n';
+    // }catch(...){
+    //     std::cerr << "la coda è vuota" << std::endl;
+    // }
     separator_lines();
 }
 
+// errore su q_empty
 void test_enqueue_e_dequeue_HARD_struct()
 {
     std::cout << "******** Test ENQUEUE e DEQUEUE randomici su Punto ********" << std::endl;
@@ -308,7 +331,8 @@ void test_enqueue_e_dequeue_HARD_struct()
 
     int scelta, xCasuale, yCasuale;
 
-    std::cout << q << "\n" << std::endl;
+    std::cout << q << "\n"
+              << std::endl;
     for (long i = 1; i < n_volte; i++)
     {
         xCasuale = distribuzione(gen);
@@ -327,7 +351,8 @@ void test_enqueue_e_dequeue_HARD_struct()
             q.dequeue();
             std::cout << "DEQUEUE" << std::endl;
         }
-        std::cout << q << "\n" << std::endl;
+        std::cout << q << "\n"
+                  << std::endl;
     }
 
     separator_lines();
@@ -403,8 +428,9 @@ void test_iter_ctor_struct()
 void test_read_write_struct()
 {
     std::cout << "******** Test azioni di lettura su CODA di Struct ********" << std::endl;
-    
-    try{
+
+    try
+    {
         Punto a[5] = {Punto(1, 1), Punto(2, 2), Punto(3, 3), Punto(4, 4), Punto(5, 5)};
         Queue<Punto> q(a, a + 5);
 
@@ -418,18 +444,18 @@ void test_read_write_struct()
         std::cout << "q dopo scritture: " << q << std::endl;
 
         std::cout << "******** Test azioni di lettura su CODA VUOTA di Struct ********" << std::endl;
-        
+
         Queue<Punto> q_empty;
-        
+
         std::cout << "q_empty: " << q_empty << std::endl;
         std::cout << "Leggo primo: " << q_empty.first() << std::endl;
         std::cout << "Leggo ultimo: " << q_empty.last() << std::endl;
-        
-    }catch(...){
+    }
+    catch (...)
+    {
         std::cerr << "la coda è vuota" << std::endl;
     }
 
-    
     separator_lines();
 }
 
@@ -456,45 +482,50 @@ void test_find_struct()
     separator_lines();
 }
 
-struct Person {
+struct Person
+{
     std::string name;
     int age;
 
-    Person(const std::string& name, int age) : name(name), age(age) {}
+    Person(const std::string &name, int age) : name(name), age(age) {}
 
-    friend std::ostream& operator<<(std::ostream& os, const Person& p) {
+    friend std::ostream &operator<<(std::ostream &os, const Person &p)
+    {
         os << "(Nome: " << p.name << ", Età: " << p.age << ")";
         return os;
     }
 
-    const std::string& getName() const { return name; }
-    void setName(const std::string& newName) { name = newName; }
+    const std::string &getName() const { return name; }
+    void setName(const std::string &newName) { name = newName; }
 
     //   Person& operator=(const Person& other) {
-    //     if (this != &other) {  
-    //         name = other.name; 
-    //         age = other.age;  
+    //     if (this != &other) {
+    //         name = other.name;
+    //         age = other.age;
     //     }
-    //     return *this;  
+    //     return *this;
     // }
 };
-struct age_below_30 
+struct age_below_30
 {
-    bool operator()(const Person &p )const{
-        return p.age<30;
+    bool operator()(const Person &p) const
+    {
+        return p.age < 30;
     }
 };
 
 struct modified_name
 {
-    Person operator()(Person& p)const{
+    Person operator()(Person &p) const
+    {
         p.setName(p.getName() + "(too young)");
         return p;
     }
 };
 
 // Test per la coda di oggetti struct (Person)
-void testStructQueue() {
+void testStructQueue()
+{
     std::cout << "\n Test: Coda di struct Person\n";
 
     Queue<Person> q;
@@ -507,48 +538,40 @@ void testStructQueue() {
     q.enqueue(Person("Sara", 40));
 
     std::cout << "q: " << q << std::endl;
-    
-
-    
 
     // dequeue e visualizzazione
     q.dequeue();
     std::cout << "\nContenuto dopo dequeue: \n";
     std::cout << "q: " << q << std::endl;
 
-
     transformIf(q, age_below_30(), modified_name());
     std::cout << "q: " << q << std::endl;
-
 }
-
-
-
-
 
 int main()
 {
 
-    // Test su interi
-    // test_enqueue_e_dequeue_EASY();
-    // test_enqueue_e_dequeue_HARD();
-    // test_copy_construtor();
-    // test_metodi_fondamentali_int();
-    // test_iter_ctor();
+    // TEST OK INT
+    //  test_enqueue_e_dequeue_EASY();
+    //  test_copy_construtor();
+    //  test_metodi_fondamentali_int();
+    //  test_iter_ctor();
+
+    // TEST DA SISTEMARE
+
+    test_enqueue_e_dequeue_HARD();
     // test_read_write();
-    // test_find();
+    //  test_find();
+    //  test_enqueue_e_dequeue_EASY_struct();
+    //  test_enqueue_e_dequeue_HARD_struct();
 
-    // Test su struct Punto
-    // test_enqueue_e_dequeue_EASY_struct();
-    // test_enqueue_e_dequeue_HARD_struct();
-    // test_copy_construtor_struct();
-    // test_metodi_fondamentali_struct();
-    // test_iter_ctor_struct();
-    //test_read_write_struct();
-    test_find_struct();
-
-
-    // testStructQueue();
+    // TEST OK STRUCT
+    //  test_copy_construtor_struct();
+    //  test_metodi_fondamentali_struct();
+    //  test_iter_ctor_struct();
+    //  test_read_write_struct();
+    //  test_find_struct();
+    //  testStructQueue();
 
     return 0;
 }
