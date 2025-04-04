@@ -23,7 +23,7 @@ void printArray(const T (&arr)[N])
 }
 
 /*     INT     */
-void test_enqueue_e_dequeue_EASY()
+void test_enqueue_e_dequeue()
 {
     std::cout << "******** Test enqueue e dequeue su CODA (int)********" << std::endl;
 
@@ -167,7 +167,8 @@ void test_metodi_fondamentali_int()
     separator_lines();
 } // ~Queue()
 
-void test_iter_ctor(){
+void test_iter_ctor()
+{
 
     std::cout << "******** Test costruttore tramite due iteratori ********" << std::endl;
 
@@ -181,7 +182,8 @@ void test_iter_ctor(){
 
     separator_lines();
 }
-void test_read_write(){
+void test_read_write()
+{
     std::cout << "******** Test azioni di lettura su CODA ********" << std::endl;
     int a[5] = {1, 2, 3, 4, 5};
     Queue<int> q(a, a + 5);
@@ -207,8 +209,10 @@ void test_read_write(){
 }
 
 template <typename T>
-struct equals_primitivi {
-    bool operator()(const T& a, const T& b) const {
+struct equals_primitivi
+{
+    bool operator()(const T &a, const T &b) const
+    {
         return a == b;
     }
 };
@@ -282,7 +286,7 @@ struct Punto
 };
 
 // funtore di uguaglianza per Punto
-struct EqualsPunto
+struct compare_Punto
 {
     bool operator()(const Punto &p1, const Punto &p2) const
     {
@@ -292,8 +296,7 @@ struct EqualsPunto
 
 /*     PUNTO     */
 
-
-void test_enqueue_e_dequeue_EASY_struct()
+void test_enqueue_e_dequeue_struct()
 {
     std::cout << "******** Test enqueue e dequeue su CODA (Punto) ********" << std::endl;
     Queue<Punto> q;
@@ -313,21 +316,24 @@ void test_enqueue_e_dequeue_EASY_struct()
     std::cout << "2 rimozione: " << q << '\n';
     q.dequeue();
     std::cout << "3 rimozione: " << q << '\n';
-    
-    try{
+
+    try
+    {
         std::cout << "dequeue su coda vuota: " << std::endl;
         q.dequeue();
 
-        //unreachable
+        // unreachable
         std::cout << "coda vuota: " << q << '\n';
-    }catch(...){
+    }
+    catch (...)
+    {
         std::cerr << "la coda è vuota" << std::endl;
     }
 
     separator_lines();
 }
 
-void test_enqueue_e_dequeue_HARD_struct()
+void test_enqueue_e_dequeue_random_struct()
 {
     std::cout << "******** Test ENQUEUE e DEQUEUE randomici su CODA (Punto) ********" << std::endl;
 
@@ -356,10 +362,13 @@ void test_enqueue_e_dequeue_HARD_struct()
         }
         else
         {
-            try{
+            try
+            {
                 q.dequeue();
                 std::cout << "DEQUEUE" << std::endl;
-            }catch(...){
+            }
+            catch (...)
+            {
                 std::cerr << "ERRORE DEQUEUE: la coda è vuota" << std::endl;
             }
         }
@@ -407,10 +416,10 @@ void test_metodi_fondamentali_struct()
     std::cout << "Stampa di q dopo inserimenti:" << std::endl;
     std::cout << q << std::endl;
 
-    Queue<Punto> q2(q);
+    Queue<Punto> q2(q); //copy ctor
 
     std::cout << "Stampa di q2 dopo copy constructor:" << std::endl;
-    std::cout << q2 << std::endl;
+    std::cout << "q2: " << q2 << std::endl;
 
     Queue<Punto> q3;
     q3 = q;
@@ -418,8 +427,10 @@ void test_metodi_fondamentali_struct()
     std::cout << "Stampa di q3 dopo assegnamento:" << std::endl;
     std::cout << q3 << std::endl;
 
-    // std::cout << "elemento più vecchio di q: " << q.read_first() << std::endl;
-    // std::cout << "elemento più recente di q: " << q.read_last() << std::endl;
+    
+    std::cout << "lettura elementi: " << std::endl;
+    std::cout << "first: " << q3.first() << std::endl;
+    std::cout << "last: " << q3.last() << std::endl;
 
     separator_lines();
 }
@@ -474,7 +485,7 @@ void test_read_write_struct()
 void test_find_struct()
 {
     std::cout << "******** Test ricerca elemento nella CODA di Punto ********" << std::endl;
-    EqualsPunto equalsPredicate;
+    compare_Punto equalsPredicate;
 
     Punto a[5] = {Punto(1, 1), Punto(2, 2), Punto(3, 3), Punto(4, 4), Punto(5, 5)};
     Queue<Punto> q(a, a + 5);
@@ -494,100 +505,88 @@ void test_find_struct()
     separator_lines();
 }
 
-struct Person
-{
-    std::string name;
-    int age;
-
-    Person(const std::string &name, int age) : name(name), age(age) {}
-
-    friend std::ostream &operator<<(std::ostream &os, const Person &p)
-    {
-        os << "(Nome: " << p.name << ", Età: " << p.age << ")";
-        return os;
-    }
-
-    const std::string &getName() const { return name; }
-    void setName(const std::string &newName) { name = newName; }
-
-    //   Person& operator=(const Person& other) {
-    //     if (this != &other) {
-    //         name = other.name;
-    //         age = other.age;
-    //     }
-    //     return *this;
-    // }
-};
-struct age_below_30
-{
-    bool operator()(const Person &p) const
-    {
-        return p.age < 30;
+struct in_terzo_quadrante {
+    bool operator()(const Punto& p) const {
+        return p.x < 0 && p.y < 0;
     }
 };
 
-struct modified_name
-{
-    Person operator()(Person &p) const
-    {
-        p.setName(p.getName() + "(too young)");
-        return p;
+struct porta_in_primo_quadrante {
+    Punto operator()(const Punto& p) const {
+        if (p.x >= 0 && p.y >= 0)
+        {
+            return p;
+        }
+        int new_x = p.x*(-1);
+        int new_y = p.y*(-1);
+        return Punto(new_x, new_y);
     }
 };
 
-// Test per la coda di oggetti struct (Person)
-void testStructQueue()
-{
-    std::cout << "\n Test: Coda di struct Person\n";
+void test_struct_Punto() {
+    std::cout << "\n Test: Coda di struct Punto\n";
 
-    Queue<Person> q;
-    transformIf(q, age_below_30(), modified_name());
+    Queue<Punto> q;
 
-    q.enqueue(Person("Alice", 30));
-    q.enqueue(Person("Giacomo", 25));
-    q.enqueue(Person("Carlo", 35));
-    q.enqueue(Person("Andrea", 20));
-    q.enqueue(Person("Sara", 40));
+    q.enqueue(Punto(-5, -5));       // TERZO quadrante   
+    q.enqueue(Punto(12, -8));       // quarto quadrante
+    q.enqueue(Punto(-3, 2));        // secondo quadrante
+    q.enqueue(Punto(-15, -20));     // TERZO quadrante
+    q.enqueue(Punto(7, 1));         // primo quadrante
 
     std::cout << "q: " << q << std::endl;
 
-    // dequeue e visualizzazione
+    // Primo transformIf
+    transformIf(q, in_terzo_quadrante(), porta_in_primo_quadrante());
+
+    std::cout << "Dopo transformIf: " << std::endl;
+    std::cout << "q: " << q << std::endl;
+
+    // dequeue
     q.dequeue();
-    std::cout << "\nContenuto dopo dequeue: \n";
+    std::cout << "Dopo dequeue: " << std::endl;
     std::cout << "q: " << q << std::endl;
 
-    transformIf(q, age_below_30(), modified_name());
+    // Secondo transformIf
+    transformIf(q, in_terzo_quadrante(), porta_in_primo_quadrante());
+
+    std::cout << "\nDopo secondo transformIf:\n";
     std::cout << "q: " << q << std::endl;
 }
+
 
 int main()
 {
 
     // TEST OK INT
-     test_enqueue_e_dequeue_EASY();
-    test_enqueue_e_dequeue_HARD();
-     test_copy_construtor();
-     test_metodi_fondamentali_int();
-     test_iter_ctor();
-    test_read_write();
-    test_find();
+    // test_enqueue_e_dequeue();
+    // test_enqueue_e_dequeue_HARD();
+    // test_copy_construtor();
+    // test_metodi_fondamentali_int();
+    // test_iter_ctor();
+    // test_read_write();
+    // test_find();
 
     // TEST DA SISTEMARE
 
-/*va tolta person come struct e vanno implementato metodi di transformif per punto
-in piu oigni test deve essere standard:
--iniziare con la riga con titolo e asterischi
--finire con separator lines*/
+    /*
+        va tolta person come struct e vanno implementate struct per
+        i metodi di transformif con Punto
+        in piu ogni test deve essere standard:
+            -iniziare con la riga con titolo e asterischi
+            -finire con separator lines
+    */
 
     // TEST OK STRUCT
-    test_enqueue_e_dequeue_EASY_struct();
-    test_enqueue_e_dequeue_HARD_struct();
-     test_copy_construtor_struct();
-     test_metodi_fondamentali_struct();
-     test_iter_ctor_struct();
-     test_read_write_struct();
-     test_find_struct();
-     testStructQueue();
+    // test_enqueue_e_dequeue_struct();
+    // test_enqueue_e_dequeue_random_struct();
+    // test_copy_construtor_struct();
+    // test_metodi_fondamentali_struct();
+    // test_iter_ctor_struct();
+    // test_read_write_struct();
+    // test_find_struct();
+    // testStructQueue();
+    test_struct_Punto();
 
     return 0;
 }
